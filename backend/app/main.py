@@ -1,12 +1,17 @@
 from fastapi import FastAPI
+from app.core.config import settings
 
+app = FastAPI(
+    title=settings.app_name,
+    version=settings.app_version,
+)
 
-app = FastAPI(title="Atlas AI")
-
-@app.get('/health')
+@app.get("/health")
 def health():
     return {
         "status": "healthy",
-        "application": "Atlas AI"
+        "application": settings.app_name,
+        "version": settings.app_version,
+        "debug": settings.debug,
     }
 
