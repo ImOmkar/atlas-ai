@@ -35,6 +35,14 @@ class UserRepository:
         )
 
 
+    def get_all_users(self) -> list[User]:
+        return (
+            self.db.query(User)
+            .order_by(User.id)
+            .all()
+        )
+
+
     def create_refresh_token(
         self,
         refresh_token: RefreshToken,

@@ -8,3 +8,6 @@ class InvalidCredentialsError(Exception):
 
 class InvalidRefreshTokenError(Exception):
     """Raised when a refresh token is invalid."""
+
+class PermissionDeniedError(Exception):
+    """Raised when the user doesn't have permission."""

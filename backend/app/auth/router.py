@@ -1,13 +1,15 @@
 from fastapi import Request, APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from app.auth.schemas import LogoutRequest, RefreshRequest, SessionInfo, UserCreate, UserResponse, TokenResponse, LoginRequest
+from app.auth.schemas import LogoutRequest, RefreshRequest, SessionInfo, UserCreate, UserListResponse, UserResponse, TokenResponse, LoginRequest
 from app.auth.service import AuthService
 from app.db.dependencies import get_db
 
-from app.auth.dependencies import get_current_user
+from app.auth.dependencies import get_current_user, require_roles
 from app.auth.models import User
 from fastapi.security import OAuth2PasswordRequestForm
+
+from app.auth.enums import UserRole
 
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
@@ -94,3 +96,32 @@ def me(
     current_user: User = Depends(get_current_user),
 ):
     return current_user
+
+
+@router.get("/admin")
+def admin_only(
+    current_user: User = Depends(
+        require_roles(
+            UserRole.ADMIN,
+        )
+    ),
+):
+    return {
+        "message": "Welcome Admin",
+    }
+
+
+
+@router.get(
+    "/users",
+    response_model=list[UserListResponse],
+)
+def get_users(
+    current_user: User = Depends(
+        require_roles(UserRole.ADMIN),
+    ),
+    db: Session = Depends(get_db),
+):
+    service = AuthService(db)
+
+    return service.get_all_users()

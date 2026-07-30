@@ -9,11 +9,17 @@ from app.auth.exceptions import InvalidCredentialsError, InvalidRefreshTokenErro
 
 from datetime import UTC, datetime, timedelta
 
+from app.auth.enums import UserRole
+
 
 class AuthService:
 
     def __init__(self, db: Session):
         self.user_repository = UserRepository(db)
+
+
+    def get_all_users(self) -> list[User]:
+        return self.user_repository.get_all_users()
 
     def register_user(
         self,
@@ -31,6 +37,7 @@ class AuthService:
             name=user_data.name,
             email=user_data.email,
             password_hash=hashed_password,
+            role=UserRole.USER,
         )
 
         return self.user_repository.create(user)
@@ -164,3 +171,4 @@ class AuthService:
         db_token.revoked_at = datetime.now(UTC)
 
         self.user_repository.save()
+    

@@ -11,6 +11,10 @@ from sqlalchemy.orm import (
     relationship,
 )
 
+from sqlalchemy import Enum
+
+from app.auth.enums import UserRole
+
 from app.db.base import Base
 from app.db.mixins import TimestampMixin
 
@@ -45,6 +49,13 @@ class User(TimestampMixin, Base):
         Boolean,
         nullable=False,
         default=False,
+    )
+
+
+    role: Mapped[UserRole] = mapped_column(
+        Enum(UserRole),
+        nullable=False,
+        default=UserRole.USER,
     )
 
 

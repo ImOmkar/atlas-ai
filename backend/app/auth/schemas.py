@@ -1,7 +1,7 @@
 
 
 from datetime import datetime
-
+from app.auth.enums import UserRole
 from pydantic import BaseModel, EmailStr, ConfigDict
 
 
@@ -17,12 +17,23 @@ class UserResponse(BaseModel):
     email: EmailStr
     is_active: bool
     is_verified: bool
+    role: UserRole
     created_at: datetime
 
     model_config = ConfigDict(
         from_attributes=True
     )
 
+
+class UserListResponse(BaseModel):
+    id: int
+    name: str
+    email: EmailStr
+    role: UserRole
+    is_active: bool
+    is_verified: bool
+
+    model_config = ConfigDict(from_attributes=True)
 
 class LoginRequest(BaseModel):
     email: EmailStr
