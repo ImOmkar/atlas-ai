@@ -5,10 +5,19 @@ from sqlalchemy import text
 
 from app.db.engine import engine
 
+from app.core.exception_handlers import register_exception_handlers
+
+from app.auth.router import router as auth_router
+
 app = FastAPI(
     title=settings.app_name,
     version=settings.app_version,
 )
+
+
+register_exception_handlers(app)
+
+app.include_router(auth_router)
 
 @app.get("/health")
 def health():
