@@ -8,16 +8,22 @@ from app.db.engine import engine
 from app.core.exception_handlers import register_exception_handlers
 
 from app.auth.router import router as auth_router
+from app.organizations.router import router as organization_router
+from app.projects.router import router as project_router
+from app.documents.router import router as document_router
 
 app = FastAPI(
     title=settings.app_name,
     version=settings.app_version,
 )
 
-
 register_exception_handlers(app)
 
 app.include_router(auth_router)
+app.include_router(organization_router)
+app.include_router(project_router)
+app.include_router(document_router)
+
 
 @app.get("/health")
 def health():

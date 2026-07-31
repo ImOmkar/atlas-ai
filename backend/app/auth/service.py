@@ -2,15 +2,15 @@ from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.auth.models import RefreshToken, User
-from app.auth.schemas import LoginRequest, LogoutRequest, RefreshRequest, SessionInfo, TokenResponse, UserCreate
+from app.auth.schemas import LoginRequest, LogoutRequest, PaginatedUsersResponse, RefreshRequest, SessionInfo, TokenResponse, UpdateUserRoleRequest, UpdateUserStatusRequest, UserCreate
 from app.auth.security import create_access_token, generate_refresh_token, hash_password, hash_refresh_token, verify_password
 from app.auth.user_repository import UserRepository
-from app.auth.exceptions import InvalidCredentialsError, InvalidRefreshTokenError, UserAlreadyExistsError
+from app.auth.exceptions import InvalidCredentialsError, InvalidRefreshTokenError, UserAlreadyExistsError, UserNotFoundError
 
 from datetime import UTC, datetime, timedelta
 
 from app.auth.enums import UserRole
-
+import math
 
 class AuthService:
 
@@ -18,8 +18,30 @@ class AuthService:
         self.user_repository = UserRepository(db)
 
 
-    def get_all_users(self) -> list[User]:
-        return self.user_repository.get_all_users()
+    def get_all_users(
+        self,
+        page: int,
+        page_size: int,
+        search: str | None = None,
+        role: UserRole | None = None,
+        is_active: bool | None = None,
+    ) -> PaginatedUsersResponse:
+
+        users, total = self.user_repository.get_all_users(
+            page=page,
+            page_size=page_size,
+            search=search,
+            role=role,
+            is_active=is_active,
+        )
+
+        return PaginatedUsersResponse(
+            items=users,
+            total=total,
+            page=page,
+            page_size=page_size,
+            total_pages=math.ceil(total / page_size),
+        )
 
     def register_user(
         self,
@@ -41,7 +63,46 @@ class AuthService:
         )
 
         return self.user_repository.create(user)
+    
 
+    def update_user_role(
+        self,
+        user_id: int,
+        request: UpdateUserRoleRequest,
+    ) -> User:
+
+        user = self.user_repository.get_user_by_id(
+            user_id,
+        )
+
+        if user is None:
+            raise UserNotFoundError()
+
+        user.role = request.role
+
+        self.user_repository.save()
+
+        return user
+
+    def update_user_status(
+        self,
+        user_id: int,
+        request: UpdateUserStatusRequest,
+    ) -> User:
+
+        user = self.user_repository.get_user_by_id(
+            user_id,
+        )
+
+        if user is None:
+            raise UserNotFoundError()
+
+        user.is_active = request.is_active
+
+        self.user_repository.save()
+
+        return user
+        
     def login(
         self,
         credentials: LoginRequest,
@@ -52,6 +113,10 @@ class AuthService:
 
         # User doesn't exist
         if user is None:
+            raise InvalidCredentialsError()
+
+        # User is inactive
+        if not user.is_active:
             raise InvalidCredentialsError()
 
         # Password doesn't match

@@ -11,3 +11,7 @@ class InvalidRefreshTokenError(Exception):
 
 class PermissionDeniedError(Exception):
     """Raised when the user doesn't have permission."""
+
+class UserNotFoundError(Exception):
+    """Raised when the user does not exist."""
+

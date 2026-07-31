@@ -1,6 +1,9 @@
 from sqlalchemy.orm import Session
 from app.auth.models import RefreshToken
 from app.auth.models import User
+from sqlalchemy import or_
+
+from app.auth.enums import UserRole
 
 class UserRepository:
 
@@ -34,13 +37,57 @@ class UserRepository:
             .first()
         )
 
-
-    def get_all_users(self) -> list[User]:
+    def get_user_by_id(
+        self,
+        user_id: int,
+    ) -> User | None:
         return (
             self.db.query(User)
+            .filter(User.id == user_id)
+            .first()
+        )
+
+
+    def get_all_users(
+        self,
+        page: int,
+        page_size: int,
+        search: str | None = None,
+        role: UserRole | None = None,
+        is_active: bool | None = None,
+    ) -> tuple[list[User], int]:
+        
+        query = self.db.query(User)
+
+        if search:
+            query = query.filter(
+                or_(
+                    User.name.ilike(f"%{search}%"),
+                    User.email.ilike(f"%{search}%"),
+                )
+            )
+
+        if role is not None:
+            query = query.filter(
+                User.role == role,
+            )
+
+        if is_active is not None:
+            query = query.filter(
+                User.is_active == is_active,
+            )
+
+        total = query.count()
+
+        users = (
+            query
             .order_by(User.id)
+            .offset((page - 1) * page_size)
+            .limit(page_size)
             .all()
         )
+
+        return users, total
 
 
     def create_refresh_token(

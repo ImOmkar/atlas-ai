@@ -1,7 +1,10 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from app.auth.exceptions import InvalidRefreshTokenError, PermissionDeniedError, UserAlreadyExistsError, InvalidCredentialsError
+from app.auth.exceptions import InvalidRefreshTokenError, PermissionDeniedError, UserAlreadyExistsError, InvalidCredentialsError, UserNotFoundError
+from app.organizations.exceptions import OrganizationMemberNotFoundError, OrganizationNotFoundError
+from app.projects.exceptions import ProjectNotFoundError
+from app.documents.exceptions import DocumentFileNotFoundError, DocumentNotFoundError
 
 def register_exception_handlers(app: FastAPI):
 
@@ -50,5 +53,80 @@ def register_exception_handlers(app: FastAPI):
             status_code=403,
             content={
                 "detail": "Permission denied",
+            },
+        )
+
+    @app.exception_handler(UserNotFoundError)
+    async def user_not_found_exception_handler(
+        request: Request,
+        exc: UserNotFoundError,
+    ):
+        return JSONResponse(
+            status_code=404,
+            content={
+                "detail": "User not found",
+            },
+        )
+
+    @app.exception_handler(OrganizationNotFoundError)
+    async def organization_not_found_exception_handler(
+        request: Request,
+        exc: OrganizationNotFoundError,
+    ):
+        return JSONResponse(
+            status_code=404,
+            content={
+                "detail": "Organization not found",
+            },
+        )
+
+    @app.exception_handler(OrganizationMemberNotFoundError)
+    async def organization_member_not_found_exception_handler(
+        request: Request,
+        exc: OrganizationMemberNotFoundError,
+    ):
+        return JSONResponse(
+            status_code=404,
+            content={
+                "detail": "Organization member not found",
+            },
+        )
+
+
+    @app.exception_handler(ProjectNotFoundError)
+    async def project_not_found_exception_handler(
+        request: Request,
+        exc: ProjectNotFoundError,
+    ):
+        return JSONResponse(
+            status_code=404,
+            content={
+                "detail": "Project not found",
+            },
+        )
+
+
+    @app.exception_handler(DocumentNotFoundError)
+    async def document_not_found_exception_handler(
+        request: Request,
+        exc: DocumentNotFoundError,
+    ):
+        return JSONResponse(
+            status_code=404,
+            content={
+                "detail": "Document not found",
+            },
+        )
+
+
+    @app.exception_handler(DocumentFileNotFoundError)
+    async def document_file_not_found_exception_handler(
+        request: Request,
+        exc: DocumentFileNotFoundError,
+    ):
+        return JSONResponse(
+            status_code=404,
+            content={
+                "detail": "Document file not found",
             },
         )

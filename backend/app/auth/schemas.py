@@ -24,7 +24,12 @@ class UserResponse(BaseModel):
         from_attributes=True
     )
 
+class UpdateUserRoleRequest(BaseModel):
+    role: UserRole
 
+class UpdateUserStatusRequest(BaseModel):
+    is_active: bool
+    
 class UserListResponse(BaseModel):
     id: int
     name: str
@@ -34,6 +39,15 @@ class UserListResponse(BaseModel):
     is_verified: bool
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class PaginatedUsersResponse(BaseModel):
+    items: list[UserListResponse]
+    total: int
+    page: int
+    page_size: int
+    total_pages: int
+
 
 class LoginRequest(BaseModel):
     email: EmailStr

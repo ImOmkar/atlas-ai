@@ -1,7 +1,7 @@
-from fastapi import Request, APIRouter, Depends
+from fastapi import Query, Request, APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from app.auth.schemas import LogoutRequest, RefreshRequest, SessionInfo, UserCreate, UserListResponse, UserResponse, TokenResponse, LoginRequest
+from app.auth.schemas import LogoutRequest, PaginatedUsersResponse, RefreshRequest, SessionInfo, UpdateUserRoleRequest, UpdateUserStatusRequest, UserCreate, UserListResponse, UserResponse, TokenResponse, LoginRequest
 from app.auth.service import AuthService
 from app.db.dependencies import get_db
 
@@ -114,9 +114,14 @@ def admin_only(
 
 @router.get(
     "/users",
-    response_model=list[UserListResponse],
+    response_model=PaginatedUsersResponse,
 )
 def get_users(
+    page: int = Query(1, ge=1),
+    page_size: int = Query(10, ge=1, le=100),
+    search: str | None = Query(default=None),
+    role: UserRole | None = Query(default=None),
+    is_active: bool | None = Query(default=None),
     current_user: User = Depends(
         require_roles(UserRole.ADMIN),
     ),
@@ -124,4 +129,49 @@ def get_users(
 ):
     service = AuthService(db)
 
-    return service.get_all_users()
+    return service.get_all_users(
+        page=page,
+        page_size=page_size,
+        search=search,
+        role=role,
+        is_active=is_active,
+    )
+
+
+@router.patch(
+    "/users/{user_id}/role",
+    response_model=UserResponse,
+)
+def update_user_role(
+    user_id: int,
+    request: UpdateUserRoleRequest,
+    current_user: User = Depends(
+        require_roles(UserRole.ADMIN),
+    ),
+    db: Session = Depends(get_db),
+):
+    service = AuthService(db)
+
+    return service.update_user_role(
+        user_id=user_id,
+        request=request,
+    )
+
+@router.patch(
+    "/users/{user_id}/status",
+    response_model=UserResponse,
+)
+def update_user_status(
+    user_id: int,
+    request: UpdateUserStatusRequest,
+    current_user: User = Depends(
+        require_roles(UserRole.ADMIN),
+    ),
+    db: Session = Depends(get_db),
+):
+    service = AuthService(db)
+
+    return service.update_user_status(
+        user_id=user_id,
+        request=request,
+    )
