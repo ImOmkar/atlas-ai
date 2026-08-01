@@ -2,7 +2,7 @@ from pathlib import Path
 import shutil
 from uuid import uuid4
 
-from fastapi import UploadFile
+from fastapi import BackgroundTasks, UploadFile
 
 from app.projects.exceptions import ProjectNotFoundError
 from app.documents.models import Document
@@ -12,6 +12,12 @@ from app.documents.repository import DocumentRepository
 from app.documents.exceptions import DocumentFileNotFoundError, DocumentNotFoundError
 
 from pathlib import Path
+
+from app.db.session import SessionLocal
+
+from app.document_processing.service import (
+    DocumentProcessingService,
+)
 
 UPLOAD_DIRECTORY = Path("storage/documents")
 
@@ -75,6 +81,7 @@ class DocumentService:
         organization_id: int,
         project_id: int,
         file: UploadFile,
+        background_tasks: BackgroundTasks
     ):
 
         project = self.project_repository.get_by_id(
@@ -107,12 +114,38 @@ class DocumentService:
             content_type=file.content_type,
             file_size=storage_path.stat().st_size,
             storage_path=str(storage_path),
-            status=DocumentStatus.READY,
+            status=DocumentStatus.PROCESSING,
         )
 
-        return self.document_repository.create(
+        document = self.document_repository.create(
             document,
         )
+
+        background_tasks.add_task(
+            self._process_document,
+            document.id,
+        )
+
+        return document
+
+
+    def _process_document(
+        self,
+        document_id: int,
+    ):
+        db = SessionLocal()
+
+        try:
+            service = DocumentProcessingService(
+                db,
+            )
+
+            service.process_document(
+                document_id,
+            )
+
+        finally:
+            db.close()
 
 
     def download(

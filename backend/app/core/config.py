@@ -18,6 +18,12 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
+    gemini_api_key: str = "your_api_key"
+
+    gemini_chat_model: str = "gemini-3.5-flash"
+
+    gemini_embedding_model: str = "gemini-embedding-001"
+
     secret_key: str
 
     model_config = SettingsConfigDict(

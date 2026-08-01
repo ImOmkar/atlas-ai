@@ -7,6 +7,10 @@ from app.auth.models import RefreshToken, User
 from app.organizations.models import Organization, OrganizationMember
 from app.projects.models import Project
 from app.documents.models import Document
+from app.document_chunks.models import DocumentChunk
+from app.document_embeddings.models import (
+    DocumentEmbedding,
+)
 
 __all__ = [
     "User",
@@ -14,5 +18,7 @@ __all__ = [
     "Organization",
     "OrganizationMember",
     "Project",
-    "Document"
+    "Document",
+    "DocumentChunk",
+    "DocumentEmbedding"
 ]

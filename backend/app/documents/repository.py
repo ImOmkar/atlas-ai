@@ -36,6 +36,20 @@ class DocumentRepository:
             .first()
         )
 
+
+    def get_by_id_(
+        self,
+        document_id: int,
+    ) -> Document | None:
+
+        return (
+            self.db.query(Document)
+            .filter(
+                Document.id == document_id,
+            )
+            .first()
+        )
+
     def create(
         self,
         document: Document,
@@ -55,3 +69,14 @@ class DocumentRepository:
 
         self.db.delete(document)
         self.db.commit()
+
+
+    def update(
+        self,
+        document: Document,
+    ) -> Document:
+
+        self.db.commit()
+        self.db.refresh(document)
+
+        return document

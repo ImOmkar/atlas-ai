@@ -18,6 +18,8 @@ from app.projects.service import ProjectService
 from app.documents.schemas import DocumentResponse
 from app.documents.service import DocumentService
 
+from fastapi import BackgroundTasks
+
 router = APIRouter(
     prefix="/documents",
     tags=["Documents"],
@@ -30,6 +32,7 @@ router = APIRouter(
 def upload_document(
     organization_id: int,
     project_id: int,
+    background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
     current_member: OrganizationMember = Depends(
         require_organization_roles(
@@ -46,6 +49,7 @@ def upload_document(
         organization_id,
         project_id,
         file,
+        background_tasks,
     )
 
 

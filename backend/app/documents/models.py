@@ -1,4 +1,4 @@
-from sqlalchemy import Enum, ForeignKey, Integer, String
+from sqlalchemy import Enum, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base
@@ -45,6 +45,11 @@ class Document(TimestampMixin, Base):
     storage_path: Mapped[str] = mapped_column(
         String(500),
         nullable=False,
+    )
+
+    extracted_text: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
     )
 
     status: Mapped[DocumentStatus] = mapped_column(
