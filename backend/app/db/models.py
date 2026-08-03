@@ -12,6 +12,11 @@ from app.document_embeddings.models import (
     DocumentEmbedding,
 )
 
+from app.conversation.models import (
+    Conversation,
+    ConversationMessage,
+)
+
 __all__ = [
     "User",
     "RefreshToken",
@@ -20,5 +25,7 @@ __all__ = [
     "Project",
     "Document",
     "DocumentChunk",
-    "DocumentEmbedding"
+    "DocumentEmbedding",
+    "Conversation",
+    "ConversationMessage"
 ]

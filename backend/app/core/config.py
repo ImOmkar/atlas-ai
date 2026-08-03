@@ -20,7 +20,7 @@ class Settings(BaseSettings):
 
     gemini_api_key: str = "your_api_key"
 
-    gemini_chat_model: str = "gemini-3.5-flash"
+    gemini_chat_model: str = "gemini-2.5-flash"
 
     gemini_embedding_model: str = "gemini-embedding-001"
 

@@ -6,7 +6,9 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "alembic>=1.18.5",
+    "bm25s>=0.3.10",
     "fastapi>=0.140.13",
+    "google-genai>=2.16.0",
     "langchain-text-splitters>=1.1.2",
     "pdf2image>=1.17.0",
     "pgvector>=0.5.0",

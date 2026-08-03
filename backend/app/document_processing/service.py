@@ -40,6 +40,9 @@ from app.document_embeddings.repository import (
     DocumentEmbeddingRepository,
 )
 
+from app.core.config import settings
+
+
 class DocumentProcessingService:
 
     def __init__(
@@ -125,7 +128,7 @@ class DocumentProcessingService:
                     DocumentEmbedding(
                         chunk_id=chunk.id,
                         provider="gemini",
-                        model="placeholder",
+                        model=settings.gemini_embedding_model,
                         embedding=vector,
                     )
                 )

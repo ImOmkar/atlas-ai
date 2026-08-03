@@ -2,6 +2,8 @@ from app.embeddings.base import (
     BaseEmbeddingProvider,
 )
 
+from app.ai.gemini import client
+from app.core.config import settings
 
 class GeminiEmbeddingProvider(
     BaseEmbeddingProvider,
@@ -12,4 +14,9 @@ class GeminiEmbeddingProvider(
         text: str,
     ) -> list[float]:
 
-        return [0.0] * 3072
+        response = client.models.embed_content(
+            model=settings.gemini_embedding_model,
+            contents=text,
+        )
+
+        return response.embeddings[0].values
