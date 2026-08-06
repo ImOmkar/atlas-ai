@@ -71,21 +71,18 @@ class SearchService:
             )
         )
 
-        normalized_keyword_chunks = []
-
-        for chunk in keyword_chunks:
-
-            normalized_keyword_chunks.append(
-                (
-                    chunk,
-                    chunk.document,
-                    1.0,
-                )
+        keyword_chunks = (
+            self.keyword_search.search(
+                organization_id,
+                project_id,
+                query,
+                limit,
             )
+        )
 
         chunks = (
             vector_chunks +
-            normalized_keyword_chunks
+            keyword_chunks
         )
 
         unique = {}

@@ -23,3 +23,20 @@ class DocumentChunkRepository:
         )
 
         self.db.commit()
+
+    def get_document_chunks(
+        self,
+        document_id: int,
+    ):
+        return (
+            self.db.query(
+                DocumentChunk,
+            )
+            .filter(
+                DocumentChunk.document_id == document_id,
+            )
+            .order_by(
+                DocumentChunk.chunk_index
+            )
+            .all()
+        )

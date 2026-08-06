@@ -8,6 +8,10 @@ class ChatRequest(BaseModel):
 
     conversation_id: int | None = None
 
+    document_id: int | None = None
+
+    extraction_schema: dict | None = None
+
     question: str
 
     limit: int = 5

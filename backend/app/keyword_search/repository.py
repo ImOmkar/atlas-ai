@@ -2,7 +2,6 @@ from sqlalchemy.orm import (
     Session,
 )
 
-from sqlalchemy import or_
 
 from app.projects.models import (
     Project,
@@ -27,18 +26,16 @@ class KeywordSearchRepository:
 
         self.db = db
 
-    def search(
+    def get_chunks(
         self,
         organization_id: int,
         project_id: int,
-        query: str,
-        limit: int = 10,
     ) -> list[DocumentChunk]:
-
 
         return (
             self.db.query(
                 DocumentChunk,
+                Document,
             )
             .join(
                 Document,
@@ -51,16 +48,13 @@ class KeywordSearchRepository:
             .filter(
                 Project.organization_id == organization_id,
                 Project.id == project_id,
-                DocumentChunk.content.ilike(
-                    f"%{query}%"
-                ),
             )
-            .limit(limit)
+            .order_by(
+                DocumentChunk.id,
+            )
             .all()
         )
-
-
-
+    
 
 # if __name__ == "__main__":
 

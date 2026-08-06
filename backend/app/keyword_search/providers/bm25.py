@@ -50,7 +50,7 @@ class BM25Provider(
 
         corpus = [
             chunk.content
-            for chunk in chunks
+            for chunk, _ in chunks
         ]
 
         corpus_tokens = bm25s.tokenize(
@@ -76,8 +76,14 @@ class BM25Provider(
 
         for index in results[0]:
 
+            chunk, document = chunks[index]
+
             retrieved_chunks.append(
-                chunks[index]
+                (
+                    chunk,
+                    document,
+                    1.0,
+                )
             )
 
         return retrieved_chunks

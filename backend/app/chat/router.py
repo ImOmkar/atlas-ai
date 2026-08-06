@@ -12,6 +12,10 @@ from app.chat.service import (
     ChatService,
 )
 
+from app.agents.service import (
+    AgentService,
+)
+
 router = APIRouter(
     prefix="/chat",
     tags=["Chat"],
@@ -24,13 +28,15 @@ def chat(
     db: Session = Depends(get_db),
 ):
 
-    service = ChatService(db)
+    service = AgentService(db)
 
-    return service.ask(
+    return service.run(
         request.organization_id,
         request.project_id,
         request.conversation_id,
+        request.document_id,
         request.question,
+        request.extraction_schema,
         request.limit,
         request.debug,
     )

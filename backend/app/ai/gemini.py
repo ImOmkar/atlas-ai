@@ -41,3 +41,80 @@ def rerank_chunks(
     )
 
     return response.text
+
+
+
+def plan_task(
+    prompt: str,
+) -> str:
+
+    response = client.models.generate_content(
+        model=settings.gemini_chat_model,
+        contents=prompt,
+    )
+
+    return response.text.strip()
+
+
+
+def choose_tool(
+    prompt: str,
+) -> str:
+
+    response = client.models.generate_content(
+        model=settings.gemini_chat_model,
+        contents=prompt,
+    )
+
+    return response.text.strip()
+
+
+
+def generate_tool_response(
+    prompt: str,
+) -> str:
+
+    response = client.models.generate_content(
+        model=settings.gemini_chat_model,
+        contents=prompt,
+    )
+
+    return response.text.strip()
+
+
+def generate_tool_arguments(
+    prompt: str,
+) -> str:
+
+    response = client.models.generate_content(
+        model=settings.gemini_chat_model,
+        contents=prompt,
+    )
+
+    return response.text.strip()
+
+
+def generate_execution_plan(
+    prompt: str,
+) -> str:
+
+    response = client.models.generate_content(
+        model=settings.gemini_chat_model,
+        contents=prompt,
+    )
+
+    return response.text.strip()
+
+
+def generate_execution_response(
+    prompt: str,
+) -> str:
+
+    response = client.models.generate_content(
+        model=settings.gemini_chat_model,
+        contents=prompt,
+    )
+
+    return response.text.strip()
+
+
