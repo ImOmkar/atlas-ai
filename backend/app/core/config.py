@@ -24,6 +24,16 @@ class Settings(BaseSettings):
 
     gemini_embedding_model: str = "gemini-embedding-001"
 
+    llm_provider: str
+
+    deepseek_api_key: str
+
+    deepseek_base_url: str
+
+    groq_api_key: str
+
+    groq_base_url: str
+
     secret_key: str
 
     model_config = SettingsConfigDict(

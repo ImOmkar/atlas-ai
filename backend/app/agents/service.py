@@ -1,3 +1,5 @@
+from unittest import result
+
 from sqlalchemy.orm import Session
 
 from app.agents.planner import (
@@ -52,7 +54,7 @@ class AgentService:
         )
 
         self.tool_service = (
-            ToolService()
+            ToolService(db)
         )
 
         self.argument_generator = (
@@ -60,7 +62,7 @@ class AgentService:
         )
 
         self.executor = (
-            Executor()
+            Executor(db)
         )
 
     def run(
@@ -78,6 +80,8 @@ class AgentService:
         task = self.planner.plan(
             question,
         )
+
+        print(task)
 
         if task == AgentTask.CHAT:
 
@@ -98,36 +102,6 @@ class AgentService:
                     debug,
                 )
 
-            # if tool == ToolDecision.CALCULATOR:
-
-            #     arguments = (
-            #         self.argument_generator.generate(
-            #             "calculator",
-            #             question,
-            #         )
-            #     )
-
-            #     result = self.tool_service.execute(
-            #         "calculator",
-            #         arguments,
-            #     )
-
-            #     print(result)
-
-            #     prompt = TOOL_RESPONSE_PROMPT.format(
-            #             question=question,
-            #             tool="calculator",
-            #             result=result,
-            #         )
-
-            #     answer = generate_tool_response(
-            #             prompt,
-            #         )
-
-            #     return {
-            #             "answer": answer,
-            #         }
-
             if tool == ToolDecision.CALCULATOR:
 
                 answer = self.executor.run(
@@ -137,6 +111,27 @@ class AgentService:
                 return {
                     "answer": answer,
                 }
+
+
+            if tool == ToolDecision.SQL:
+
+                arguments = self.argument_generator.generate(
+                    tool,
+                    question,
+                )
+
+                result = self.tool_service.execute(
+                    "sql",
+                    arguments,
+                )
+
+                print(type(result))
+                print(result)
+
+                return {
+                    "answer": result,
+                } 
+
 
                                     
         if task == AgentTask.SUMMARIZE:

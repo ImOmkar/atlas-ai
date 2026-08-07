@@ -1,6 +1,8 @@
 
 import json
 
+from sqlalchemy.orm import Session
+
 from app.ai.gemini import (
     generate_execution_plan,
     generate_execution_response,
@@ -21,10 +23,10 @@ from app.tools.service import (
 
 
 class Executor:
-    def __init__(self):
+    def __init__(self, db: Session):
 
         self.tool_service = (
-            ToolService()
+            ToolService(db,)
         )
 
     def plan(

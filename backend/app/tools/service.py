@@ -1,6 +1,10 @@
-
+from sqlalchemy.orm import Session
 from app.tools.registry import (
     ToolRegistry,
+)
+
+from app.db.session import (
+    SessionLocal,
 )
 
 
@@ -8,10 +12,11 @@ class ToolService:
 
     def __init__(
         self,
+        db: Session,
     ):
 
         self.registry = (
-            ToolRegistry()
+            ToolRegistry(db)
         )
 
 
@@ -38,17 +43,24 @@ class ToolService:
 
 
 # if __name__ == "__main__":
-#     service = (
-#         ToolService()
-#     )
 
-#     result = service.execute(
-#         "calculator",
-#         {
-#             "expression": "25 * 18 + 100",
-#         },
-#     )
+#     db = SessionLocal()
 
-#     print(
-#         result,
-#     )
+#     try:
+
+#         service = ToolService(
+#             db,
+#         )
+
+#         result = service.execute(
+#             "sql",
+#             {
+#                 "query": "SELECT COUNT(*) FROM documents;"
+#             },
+#         )
+
+#         print(result)
+
+#     finally:
+
+#         db.close()

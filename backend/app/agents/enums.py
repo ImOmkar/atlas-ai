@@ -21,3 +21,5 @@ class ToolDecision(
     NONE = "none"
 
     CALCULATOR = "calculator"
+
+    SQL = "sql"
