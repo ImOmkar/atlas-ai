@@ -97,12 +97,21 @@ class ChatService:
             )
         )
 
+        print("Rewritten Query:", rewritten_query)
+
         chunks = self.search.search(
             organization_id,
             project_id,
             rewritten_query,
             limit,
         )
+
+        print("Retrieved:", len(chunks))
+
+        for chunk, document, distance in chunks:
+            print(document.original_filename)
+            print(chunk.chunk_index)
+            print(distance)
 
         context = [
             chunk.content

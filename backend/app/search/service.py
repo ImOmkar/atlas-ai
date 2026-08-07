@@ -101,9 +101,15 @@ class SearchService:
             unique.values()
         )
 
+        print("Vector:", len(vector_chunks))
+        print("Keyword:", len(keyword_chunks))
+        print("Merged:", len(chunks))
+
         chunks = self.reranker.rerank(
             query,
             chunks,
         )
+
+        print("After rerank:", len(chunks))
 
         return chunks

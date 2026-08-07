@@ -29,3 +29,16 @@ class ToolSelector:
         return ToolDecision(
             tool.lower(),
         )
+
+
+
+
+# if __name__ == "__main__":
+
+#     selector = ToolSelector()
+
+#     test = selector.choose(
+#         "How many casual leaves?"
+#     )
+
+#     print(test)

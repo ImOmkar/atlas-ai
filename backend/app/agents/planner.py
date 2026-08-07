@@ -39,7 +39,7 @@ class Planner:
 #     planner = Planner()
 
 #     test = planner.plan(
-#         "Summarize this document"
+#         "How many casual leaves?"
 #     )
 
 #     print(test)

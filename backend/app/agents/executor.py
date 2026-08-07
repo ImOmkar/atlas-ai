@@ -2,6 +2,7 @@
 import json
 
 from sqlalchemy.orm import Session
+from string import Template
 
 from app.agents.prompts import (
     EXECUTION_PLAN_PROMPT,
@@ -16,7 +17,7 @@ from app.tools.service import (
     ToolService,
 )
 from app.llm.service import LLMService
-
+from app.utils.llm import parse_llm_json
 
 class Executor:
     def __init__(self, db: Session):
@@ -34,17 +35,25 @@ class Executor:
         question: str,
     ):
 
-        prompt = EXECUTION_PLAN_PROMPT.format(
+        tools = "\n".join(
+            tool.name()
+            for tool in self.tool_service.registry.list_tools()
+        )
+
+        prompt = Template(EXECUTION_PLAN_PROMPT).substitute(
             question=question,
+            tools=tools,
         )
 
         response = self.llm.generate(
             prompt,
         )
 
-        return json.loads(
+        parsed_response = parse_llm_json(
             response,
         )
+
+        return parsed_response
 
     def execute(
         self,
@@ -139,37 +148,37 @@ class Executor:
 
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
     # question = "Calculate GST on ₹25000 at 18%"
 
-    # executor = Executor()
+    # executor = Executor(d)
 
     # print(
     #     executor.run(question)
     # )
 
 
-    plan = [
-        {
-            "tool": "calculator",
-            "arguments": {
-                "expression": "25000 * 18 / 100"
-            },
-            "output": "gst"
-        },
-        {
-            "tool": "calculator",
-            "arguments": {
-                "expression": "{{gst}} + 1000"
-            }
-        }
-    ]
+    # plan = [
+    #     {
+    #         "tool": "calculator",
+    #         "arguments": {
+    #             "expression": "25000 * 18 / 100"
+    #         },
+    #         "output": "gst"
+    #     },
+    #     {
+    #         "tool": "calculator",
+    #         "arguments": {
+    #             "expression": "{{gst}} + 1000"
+    #         }
+    #     }
+    # ]
 
-    executor = Executor()
+    # executor = Executor()
 
-    context = executor.execute(plan)
+    # context = executor.execute(plan)
 
-    print(context.memory())
-    print(context.all())
+    # print(context.memory())
+    # print(context.all())
         

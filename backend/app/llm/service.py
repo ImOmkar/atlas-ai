@@ -52,12 +52,12 @@ class LLMService:
 
 
 
-# if __name__ == "__main__":
+if __name__ == "__main__":
     
-#     llm = LLMService()
+    llm = LLMService()
 
-#     print(
-#         llm.generate(
-#             "Say Hello."
-#         )
-#     )
+    print(
+        llm.generate(
+            "Say Hello."
+        )
+    )

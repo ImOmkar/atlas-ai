@@ -14,6 +14,7 @@ from app.extraction.prompts import (
 import json
 
 from app.llm.service import LLMService
+from app.utils.llm import parse_llm_json
 
 
 class ExtractionService:
@@ -68,6 +69,10 @@ class ExtractionService:
             prompt,
         )
 
-        return result
+        parsed_result = parse_llm_json(
+            result,
+        )
+        
+        return parsed_result
 
 

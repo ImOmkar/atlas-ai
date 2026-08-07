@@ -19,7 +19,7 @@ class CalculatorTool(
     ):
 
         return (
-            "Perform mathematical calculations."
+            "Evaluate arithmetic expressions and perform mathematical calculations."
         )
 
     def execute(

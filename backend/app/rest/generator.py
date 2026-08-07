@@ -12,6 +12,7 @@ from app.rest.models import (
 from app.rest.prompts import (
     REST_GENERATION_PROMPT,
 )
+from app.utils.llm import parse_llm_json
 
 
 class RESTGenerator:
@@ -35,15 +36,12 @@ class RESTGenerator:
             prompt,
         )
 
-        response = (
-            response
-            .replace("```json", "")
-            .replace("```", "")
-            .strip()
+        parsed_response = parse_llm_json(
+            response,
         )
 
         return APIRequest.model_validate(
-            json.loads(response)
+            parsed_response
         )
 
 

@@ -5,6 +5,7 @@ from app.agents.prompts import (
     TOOL_ARGUMENT_PROMPT,
 )
 from app.llm.service import LLMService
+from app.utils.llm import parse_llm_json
 
 class ToolArgumentGenerator:
 
@@ -29,6 +30,20 @@ class ToolArgumentGenerator:
             prompt,
         )
 
-        return json.loads(
+        parsed_response = parse_llm_json(
             response,
         )
+
+        return parsed_response
+
+
+# if __name__ == "__main__":
+
+#     generator = ToolArgumentGenerator()
+
+#     test = generator.generate(
+#         "rest",
+#         ""
+#     )
+
+#     print(test)

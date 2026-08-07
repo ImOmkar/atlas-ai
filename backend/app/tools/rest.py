@@ -40,7 +40,7 @@ class RESTTool(
     ):
 
         return (
-            "Execute REST API requests."
+            "Call registered external REST APIs and return their responses."
         )
 
     def execute(

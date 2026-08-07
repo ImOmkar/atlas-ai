@@ -1,27 +1,26 @@
-from app.document_chunks.models import (
-    DocumentChunk,
-)
 
-from app.reranking.providers.gemini import (
-    GeminiReranker,
-)
+from app.reranking.llm import LLMReranker
 
 
 class RerankingService:
 
     def __init__(self):
 
-        self.provider = (
-            GeminiReranker()
-        )
+        self.provider = LLMReranker()
 
     def rerank(
         self,
-        question: str,
-        chunks: list[DocumentChunk],
-    ) -> list[DocumentChunk]:
+        question,
+        chunks,
+    ):
 
-        return self.provider.rerank(
-            question,
-            chunks,
-        )
+        try:
+
+            return self.provider.rerank(
+                question,
+                chunks,
+            )
+
+        except Exception as e:
+
+            return chunks

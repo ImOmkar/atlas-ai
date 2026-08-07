@@ -36,7 +36,7 @@ class SQLTool(
     ):
 
         return (
-            "Execute SQL queries."
+            "Query the application's PostgreSQL database using read-only SELECT statements."
         )
 
     def execute(
