@@ -94,6 +94,15 @@ sql
   - How many invoices exist?
   - Count all document chunks.
 
+rest
+- Use when the user wants information from an external system.
+- Examples:
+  - Get employee 101.
+  - Show customer 200.
+  - Fetch today's Jira tickets.
+  - Get GitHub repository details.
+  - Show CRM lead 450.
+  
 Return ONLY one tool name.
 
 User:
@@ -169,6 +178,12 @@ calculator
 sql
 {{
     "question": "<original user question>"
+}}
+
+rest
+{{
+    "system": "jsonplaceholder",
+    "question": "Get user 1."
 }}
 
 Rules:

@@ -1,9 +1,14 @@
-from app.ai.gemini import (
-    rewrite_query,
-)
+\
+from app.llm.service import LLMService
 
 
 class QueryRewriteService:
+    def __init__(
+        self,
+    ):
+        self.llm = (
+            LLMService()
+        )
 
     def rewrite(
         self,
@@ -37,6 +42,6 @@ class QueryRewriteService:
             {question}
         """
 
-        return rewrite_query(
+        return self.llm.generate(
             prompt,
         )

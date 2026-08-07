@@ -5,12 +5,14 @@ from app.search.service import (
 from app.chat.prompt import (
     build_prompt,
 )
-from app.ai.gemini import (
-    generate_response,
-)
+
 from app.chat.schemas import ChatResponse, CitationResponse, DebugResponse, RetrievedChunkResponse
 from app.conversation.service import (
     ConversationService,
+)
+
+from app.llm.service import (
+    LLMService,
 )
 
 from app.query_rewrite.service import (
@@ -34,6 +36,10 @@ class ChatService:
 
         self.query_rewriter = (
             QueryRewriteService()
+        )
+
+        self.llm = (
+            LLMService()
         )
 
 
@@ -137,7 +143,7 @@ class ChatService:
                 )
             )
 
-        answer = generate_response(
+        answer = self.llm.generate(
             prompt,
         )
 

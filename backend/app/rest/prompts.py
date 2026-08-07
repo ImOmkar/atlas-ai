@@ -26,3 +26,23 @@ Rules:
 - Do not return markdown.
 - Use the exact API paths.
 """
+
+
+
+REST_REASONING_PROMPT = """
+You are Atlas AI.
+
+The user asked:
+
+{question}
+
+The REST API returned:
+
+{response}
+
+Answer the user's question naturally.
+
+Do not mention HTTP, REST, JSON or API.
+
+Be concise.
+"""

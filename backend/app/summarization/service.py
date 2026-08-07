@@ -7,13 +7,10 @@ from app.document_chunks.repository import (
     DocumentChunkRepository,
 )
 
-from app.ai.gemini import (
-    generate_response,
-)
-
 from app.summarization.prompts import (
     SUMMARY_PROMPT,
 )
+from app.llm.service import LLMService
 
 
 class SummarizationService:
@@ -27,6 +24,10 @@ class SummarizationService:
             DocumentChunkRepository(
                 db,
             )
+        )
+
+        self.llm = (
+            LLMService()
         )
 
     def summarize(
@@ -47,8 +48,7 @@ class SummarizationService:
         prompt = SUMMARY_PROMPT.format(
             document=document,
         )
-
-        summary = generate_response(
+        summary = self.llm.generate(
             prompt,
         )
 

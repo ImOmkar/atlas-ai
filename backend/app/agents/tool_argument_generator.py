@@ -1,14 +1,20 @@
 import json
 
-from app.ai.gemini import (
-    generate_tool_arguments,
-)
 
 from app.agents.prompts import (
     TOOL_ARGUMENT_PROMPT,
 )
+from app.llm.service import LLMService
 
 class ToolArgumentGenerator:
+
+    def __init__(self):
+    
+            self.llm = (
+                LLMService()
+            )
+
+            
     def generate(
         self,
         tool: str,
@@ -19,7 +25,7 @@ class ToolArgumentGenerator:
             question=question,
         )
 
-        response = generate_tool_arguments(
+        response = self.llm.generate(
             prompt,
         )
 

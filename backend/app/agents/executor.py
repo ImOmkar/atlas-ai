@@ -3,11 +3,6 @@ import json
 
 from sqlalchemy.orm import Session
 
-from app.ai.gemini import (
-    generate_execution_plan,
-    generate_execution_response,
-)
-
 from app.agents.prompts import (
     EXECUTION_PLAN_PROMPT,
     EXECUTION_REASONING_PROMPT,
@@ -20,6 +15,7 @@ from app.agents.context import (
 from app.tools.service import (
     ToolService,
 )
+from app.llm.service import LLMService
 
 
 class Executor:
@@ -27,6 +23,10 @@ class Executor:
 
         self.tool_service = (
             ToolService(db,)
+        )
+
+        self.llm = (
+            LLMService()
         )
 
     def plan(
@@ -38,7 +38,7 @@ class Executor:
             question=question,
         )
 
-        response = generate_execution_plan(
+        response = self.llm.generate(
             prompt,
         )
 
@@ -114,7 +114,7 @@ class Executor:
             history=history,
         )
 
-        return generate_execution_response(
+        return self.llm.generate(
             prompt,
         )
 

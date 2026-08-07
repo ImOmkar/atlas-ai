@@ -1,14 +1,17 @@
 
-from app.ai.gemini import (
-    plan_task,
-)
-
 from app.agents.prompts import (
     PLANNER_PROMPT,
 )
 from app.agents.enums import AgentTask
+from app.llm.service import LLMService
 
 class Planner:
+
+    def __init__(self):
+
+        self.llm = (
+            LLMService()
+        )
 
     def plan(
         self,
@@ -19,9 +22,9 @@ class Planner:
             user_input=user_input,
         )
 
-        task = plan_task(
+        task = self.llm.generate(
             prompt,
-        )
+        ).strip()
 
         return AgentTask(
             task.lower(),

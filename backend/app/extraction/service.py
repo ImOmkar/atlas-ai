@@ -6,15 +6,14 @@ from app.document_chunks.repository import (
     DocumentChunkRepository,
 )
 
-from app.ai.gemini import (
-    generate_response,
-)
 
 from app.extraction.prompts import (
     EXTRACTION_PROMPT,
 )
 
 import json
+
+from app.llm.service import LLMService
 
 
 class ExtractionService:
@@ -28,6 +27,10 @@ class ExtractionService:
             DocumentChunkRepository(
                 db,
             )
+        )
+
+        self.llm = (
+            LLMService()
         )
 
 
@@ -61,7 +64,7 @@ class ExtractionService:
             document=document,
         )
 
-        result = generate_response(
+        result = self.llm.generate(
             prompt,
         )
 

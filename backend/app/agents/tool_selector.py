@@ -1,8 +1,4 @@
 
-from app.ai.gemini import (
-    choose_tool,
-)
-
 from app.agents.prompts import (
     TOOL_SELECTION_PROMPT,
 )
@@ -10,8 +6,14 @@ from app.agents.prompts import (
 from app.agents.enums import (
     ToolDecision,
 )
+from app.llm.service import LLMService
 
 class ToolSelector:
+
+    def __init__(self):
+
+        self.llm = LLMService()
+    
     def choose(
         self,
         user_input: str,
@@ -20,9 +22,9 @@ class ToolSelector:
             user_input=user_input,
         )
 
-        tool = choose_tool(
+        tool = self.llm.generate(
             prompt,
-        )
+        ).strip()
 
         return ToolDecision(
             tool.lower(),

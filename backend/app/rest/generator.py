@@ -48,20 +48,20 @@ class RESTGenerator:
 
 
 
-if __name__ == "__main__":
-    generator = RESTGenerator()
+# if __name__ == "__main__":
+#     generator = RESTGenerator()
 
-    api_spec = """
-    GET /employees
-    GET /employees/{id}
-    POST /employees
-    """
+#     api_spec = """
+#     GET /employees
+#     GET /employees/{id}
+#     POST /employees
+#     """
 
-    question = "Get the employee with ID 101."
+#     question = "Get the employee with ID 101."
 
-    api_request = generator.generate(
-        api_spec=api_spec,
-        question=question,
-    )
+#     api_request = generator.generate(
+#         api_spec=api_spec,
+#         question=question,
+#     )
 
-    print(api_request)
+#     print(api_request)

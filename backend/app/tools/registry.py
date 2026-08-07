@@ -3,6 +3,9 @@ from app.tools.calculator import (
     CalculatorTool,
 )
 from app.tools.sql import SQLTool
+from app.tools.rest import (
+    RESTTool,
+)
 
 class ToolRegistry:
 
@@ -13,7 +16,8 @@ class ToolRegistry:
 
         self.tools = {
             "calculator": CalculatorTool(),
-            "sql": SQLTool(db)
+            "sql": SQLTool(db),
+            "rest": RESTTool()
         }
 
     def get(
@@ -35,4 +39,3 @@ class ToolRegistry:
         )
 
 
-    

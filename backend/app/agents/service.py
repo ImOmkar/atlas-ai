@@ -21,7 +21,6 @@ from app.tools.service import (
 )
 from app.agents.enums import ToolDecision
 from app.agents.prompts import TOOL_RESPONSE_PROMPT
-from app.ai.gemini import generate_tool_response
 
 from app.agents.tool_argument_generator import (
     ToolArgumentGenerator,
@@ -132,6 +131,24 @@ class AgentService:
                     "answer": result,
                 } 
 
+            if tool == ToolDecision.REST:
+
+                arguments = self.argument_generator.generate(
+                    tool,
+                    question,
+                )
+
+                result = self.tool_service.execute(
+                    "rest",
+                    arguments,
+                )
+
+                print(type(result))
+                print(result)
+
+                return {
+                    "answer": result,
+                }
 
                                     
         if task == AgentTask.SUMMARIZE:

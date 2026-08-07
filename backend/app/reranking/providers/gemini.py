@@ -5,12 +5,20 @@ from app.reranking.base import (
 from app.document_chunks.models import (
     DocumentChunk,
 )
-from app.ai.gemini import rerank_chunks
+
+from app.llm.service import LLMService
 
 
 class GeminiReranker(
     BaseReranker,
 ):
+
+    def __init__(
+            self,
+        ):
+            self.llm = (
+                LLMService()
+            )
 
     def rerank(
         self,
@@ -48,7 +56,7 @@ class GeminiReranker(
             {''.join(numbered_chunks)}
         """
 
-        response = rerank_chunks(
+        response = self.llm.generate(
             prompt,
         )
 

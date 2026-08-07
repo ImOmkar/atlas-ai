@@ -23,3 +23,5 @@ class ToolDecision(
     CALCULATOR = "calculator"
 
     SQL = "sql"
+
+    REST = "rest"

@@ -1,21 +1,35 @@
+from google import genai
+
+from app.core.config import settings
+
 from app.embeddings.base import (
     BaseEmbeddingProvider,
 )
 
-from app.ai.gemini import client
-from app.core.config import settings
 
 class GeminiEmbeddingProvider(
     BaseEmbeddingProvider,
 ):
+
+    def __init__(
+        self,
+    ):
+
+        self.client = genai.Client(
+            api_key=settings.gemini_api_key,
+        )
+
+        self.model = (
+            settings.gemini_embedding_model
+        )
 
     def embed(
         self,
         text: str,
     ) -> list[float]:
 
-        response = client.models.embed_content(
-            model=settings.gemini_embedding_model,
+        response = self.client.models.embed_content(
+            model=self.model,
             contents=text,
         )
 
