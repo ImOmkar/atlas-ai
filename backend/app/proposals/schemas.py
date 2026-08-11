@@ -91,3 +91,55 @@ class ProposalDetailsResponse(
     compliance_items: list[
         ProposalComplianceItemResponse
     ] = Field(default_factory=list)
+
+
+
+class ProposalAnalysisDetailsResponse(BaseModel):
+
+    model_config = {
+        "from_attributes": True,
+    }
+
+    id: int
+    proposal_id: int
+    overall_score: float | None = None
+    summary: str | None = None
+
+    compliance_items: list[
+        ProposalComplianceItemResponse
+    ] = Field(default_factory=list)
+
+
+class ProposalAnalysisSummaryResponse(
+    BaseModel
+):
+
+    proposal_id: int
+    analysis_id: int
+
+    overall_score: float | None = None
+
+    total_requirements: int
+    compliant: int
+    partially_compliant: int
+    non_compliant: int
+    not_addressed: int
+
+    compliance_percentage: float
+
+    summary: str | None = None
+
+
+
+class ProposalComplianceItemPageResponse(
+    BaseModel
+):
+
+    items: list[
+        ProposalComplianceItemResponse
+    ]
+
+    total: int
+    page: int
+    page_size: int
+    total_pages: int

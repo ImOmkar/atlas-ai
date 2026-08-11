@@ -47,6 +47,7 @@ from app.proposals.analysis.compliance_repository import (
 from app.proposals.schemas import (
     ProposalDetailsResponse,
 )
+from app.proposals.analysis.enums import ComplianceStatus
 
 class ProposalService:
 
@@ -163,6 +164,246 @@ class ProposalService:
                 proposal_id=proposal_id,
             )
         )
+
+
+    def get_analysis(
+        self,
+        project_id: int,
+        proposal_id: int,
+    ):
+        proposal = (
+            self.proposal_repository.get_by_id(
+                project_id=project_id,
+                proposal_id=proposal_id,
+            )
+        )
+
+        if proposal is None:
+            raise ValueError(
+                "Proposal not found."
+            )
+
+        analysis = (
+            self.analysis_repository
+            .get_all(
+                proposal_id,
+            )
+        )
+
+        if not analysis:
+            raise ValueError(
+                "Proposal analysis not found."
+            )
+
+        return analysis[0]
+
+
+    def get_analysis_compliance(
+        self,
+        project_id: int,
+        proposal_id: int,
+        status: ComplianceStatus | None = None,
+    ):
+        proposal = (
+            self.proposal_repository.get_by_id(
+                project_id=project_id,
+                proposal_id=proposal_id,
+            )
+        )
+
+        if proposal is None:
+            raise ValueError(
+                "Proposal not found."
+            )
+
+        analyses = (
+            self.analysis_repository
+            .get_all(
+                proposal_id,
+            )
+        )
+
+        if not analyses:
+            raise ValueError(
+                "Proposal analysis not found."
+            )
+
+        analysis = analyses[0]
+
+        if status is None:
+
+            return (
+                self.compliance_repository
+                .get_by_analysis_id(
+                    analysis.id,
+                )
+            )
+
+        return (
+            self.compliance_repository
+            .get_by_analysis_id_and_status(
+                analysis_id=analysis.id,
+                status=status,
+            )
+        )
+
+
+    def get_analysis_summary(
+        self,
+        project_id: int,
+        proposal_id: int,
+    ):
+        proposal = (
+            self.proposal_repository.get_by_id(
+                project_id=project_id,
+                proposal_id=proposal_id,
+            )
+        )
+
+        if proposal is None:
+            raise ValueError(
+                "Proposal not found."
+            )
+
+        analyses = (
+            self.analysis_repository.get_all(
+                proposal_id,
+            )
+        )
+
+        if not analyses:
+            raise ValueError(
+                "Proposal analysis not found."
+            )
+
+        analysis = analyses[0]
+
+        compliance_items = (
+            self.compliance_repository
+            .get_by_analysis_id(
+                analysis.id,
+            )
+        )
+
+        total_requirements = len(
+            compliance_items
+        )
+
+        compliant = 0
+        partially_compliant = 0
+        non_compliant = 0
+        not_addressed = 0
+
+        for item in compliance_items:
+
+            if item.status == ComplianceStatus.COMPLIANT:
+                compliant += 1
+
+            elif (
+                item.status
+                == ComplianceStatus.PARTIALLY_COMPLIANT
+            ):
+                partially_compliant += 1
+
+            elif (
+                item.status
+                == ComplianceStatus.NON_COMPLIANT
+            ):
+                non_compliant += 1
+
+            elif (
+                item.status
+                == ComplianceStatus.NOT_ADDRESSED
+            ):
+                not_addressed += 1
+
+        compliance_percentage = (
+            (
+                compliant
+                + (partially_compliant * 0.5)
+            )
+            / total_requirements
+            * 100
+            if total_requirements
+            else 0.0
+        )
+
+        return {
+            "proposal_id": proposal.id,
+            "analysis_id": analysis.id,
+            "overall_score": analysis.overall_score,
+            "total_requirements": total_requirements,
+            "compliant": compliant,
+            "partially_compliant": (
+                partially_compliant
+            ),
+            "non_compliant": non_compliant,
+            "not_addressed": not_addressed,
+            "compliance_percentage": round(
+                compliance_percentage,
+                2,
+            ),
+            "summary": analysis.summary,
+        }
+
+
+    def get_compliance_items_paginated(
+        self,
+        project_id: int,
+        proposal_id: int,
+        page: int,
+        page_size: int,
+        status: ComplianceStatus | None = None,
+    ):
+        proposal = (
+            self.proposal_repository.get_by_id(
+                project_id=project_id,
+                proposal_id=proposal_id,
+            )
+        )
+
+        if proposal is None:
+            raise ValueError(
+                "Proposal not found."
+            )
+
+        analyses = (
+            self.analysis_repository.get_all(
+                proposal_id,
+            )
+        )
+
+        if not analyses:
+            raise ValueError(
+                "Proposal analysis not found."
+            )
+
+        analysis = analyses[0]
+
+        items, total = (
+            self.compliance_repository
+            .get_by_analysis_id_paginated(
+                analysis_id=analysis.id,
+                page=page,
+                page_size=page_size,
+                status=status,
+            )
+        )
+
+        total_pages = (
+            (total + page_size - 1)
+            // page_size
+            if total
+            else 0
+        )
+
+        return {
+            "items": items,
+            "total": total,
+            "page": page,
+            "page_size": page_size,
+            "total_pages": total_pages,
+        }
 
     def create_from_document(
         self,

@@ -48,6 +48,23 @@ class ProposalAnalysisService:
             ProposalComplianceItemRepository(db)
         )
 
+
+    def get_by_proposal_id(
+        self,
+        proposal_id: int,
+    ):
+        analyses = (
+            self.analysis_repository
+            .get_all(
+                proposal_id,
+            )
+        )
+
+        if not analyses:
+            return None
+
+        return analyses[0]
+
     def analyze(
         self,
         rfp_id: int,

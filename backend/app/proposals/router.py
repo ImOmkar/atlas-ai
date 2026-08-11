@@ -18,37 +18,24 @@ from app.proposals.schemas import (
     ProposalDetailsResponse,
 )
 
+from app.proposals.analysis.enums import (
+    ComplianceStatus,
+)
+
+from app.proposals.schemas import (
+    ProposalAnalysisResponse,
+    ProposalComplianceItemResponse,
+    ProposalDetailsResponse,
+    ProposalRequirementResponse,
+    ProposalAnalysisSummaryResponse,
+    ProposalComplianceItemPageResponse
+)
+
 router = APIRouter(
     prefix="/proposals",
     tags=["Proposals"],
 )
 
-
-@router.get(
-    "/{proposal_id}",
-    response_model=ProposalDetailsResponse,
-)
-def get_proposal(
-    proposal_id: int,
-    project_id: int,
-    db: Session = Depends(get_db),
-):
-
-    service = ProposalService(db)
-
-    try:
-
-        return service.get_details(
-            project_id=project_id,
-            proposal_id=proposal_id,
-        )
-
-    except ValueError as e:
-
-        raise HTTPException(
-            status_code=404,
-            detail=str(e),
-        )
 
 @router.post(
     "/",
@@ -139,4 +126,132 @@ def process_proposal(
         raise HTTPException(
             status_code=500,
             detail="Proposal processing failed.",
+        )
+
+@router.get(
+    "/{proposal_id}/analysis/summary",
+    response_model=ProposalAnalysisSummaryResponse,
+)
+def get_proposal_analysis_summary(
+    proposal_id: int,
+    project_id: int,
+    db: Session = Depends(get_db),
+):
+
+    service = ProposalService(db)
+
+    try:
+
+        return service.get_analysis_summary(
+            project_id=project_id,
+            proposal_id=proposal_id,
+        )
+
+    except ValueError as e:
+
+        raise HTTPException(
+            status_code=404,
+            detail=str(e),
+        )
+
+
+@router.get(
+    "/{proposal_id}/analysis",
+    response_model=ProposalAnalysisResponse,
+)
+def get_proposal_analysis(
+    proposal_id: int,
+    project_id: int,
+    db: Session = Depends(get_db),
+):
+
+    service = ProposalService(db)
+
+    try:
+
+        analysis = service.get_analysis(
+            project_id=project_id,
+            proposal_id=proposal_id,
+        )
+
+    except ValueError as e:
+
+        raise HTTPException(
+            status_code=404,
+            detail=str(e),
+        )
+
+    return analysis
+
+
+
+@router.get(
+    "/{proposal_id}/analysis/compliance",
+    response_model=ProposalComplianceItemPageResponse,
+)
+def get_proposal_compliance(
+    proposal_id: int,
+    project_id: int,
+    page: int = 1,
+    page_size: int = 20,
+    status: ComplianceStatus | None = None,
+    db: Session = Depends(get_db),
+):
+
+    if page < 1:
+        raise HTTPException(
+            status_code=400,
+            detail="page must be greater than or equal to 1.",
+        )
+
+    if page_size < 1 or page_size > 100:
+        raise HTTPException(
+            status_code=400,
+            detail="page_size must be between 1 and 100.",
+        )
+
+    service = ProposalService(db)
+
+    try:
+
+        return service.get_compliance_items_paginated(
+            project_id=project_id,
+            proposal_id=proposal_id,
+            page=page,
+            page_size=page_size,
+            status=status,
+        )
+
+    except ValueError as e:
+
+        raise HTTPException(
+            status_code=404,
+            detail=str(e),
+        )
+
+
+@router.get(
+    "/{proposal_id}",
+    response_model=ProposalDetailsResponse,
+)
+def get_proposal(
+    proposal_id: int,
+    project_id: int,
+    db: Session = Depends(get_db),
+):
+
+    service = ProposalService(db)
+
+    try:
+
+        return service.get_details(
+            project_id=project_id,
+            proposal_id=proposal_id,
+        )
+
+    except ValueError as e:
+
+        raise HTTPException(
+            status_code=404,
+            detail=str(e),
         )
