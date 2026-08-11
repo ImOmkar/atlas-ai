@@ -11,11 +11,20 @@ from app.document_chunks.models import DocumentChunk
 from app.document_embeddings.models import (
     DocumentEmbedding,
 )
+from app.rfps.models import RFP
+from app.rfps.models import RFPRequirement
 
 from app.conversation.models import (
     Conversation,
     ConversationMessage,
 )
+
+from app.proposals.models import (
+    Proposal,
+    ProposalRequirement,
+)
+
+from app.proposals.analysis.models import ProposalAnalysis
 
 __all__ = [
     "User",
@@ -27,5 +36,10 @@ __all__ = [
     "DocumentChunk",
     "DocumentEmbedding",
     "Conversation",
-    "ConversationMessage"
+    "ConversationMessage",
+    "RFP",
+    "RFPRequirement",
+    "Proposal",
+    "ProposalRequirement",
+    "ProposalAnalysis"
 ]
