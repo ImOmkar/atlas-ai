@@ -213,6 +213,16 @@ class ProposalAnalysisService:
         proposal_id: int,
     ) -> ProposalAnalysis:
 
+        existing_analysis = (
+            self.analysis_repository
+            .get_by_proposal_id(
+                proposal_id,
+            )
+        )
+
+        if existing_analysis is not None:
+            return existing_analysis
+
         result = self.analyze(
             rfp_id=rfp_id,
             proposal_id=proposal_id,
@@ -233,6 +243,10 @@ class ProposalAnalysisService:
                 analysis,
             )
         )
+
+        # raise ValueError(
+        #     "TEST: intentional compliance persistence failure"
+        # )
 
         for item in result.get(
             "items",
@@ -270,5 +284,48 @@ class ProposalAnalysisService:
             self.compliance_repository.create(
                 compliance_item,
             )
+
+        # for index, item in enumerate(
+        #     result.get(
+        #         "items",
+        #         [],
+        #     )
+        # ):
+        #     compliance_item = ProposalComplianceItem(
+        #         analysis_id=analysis.id,
+
+        #         category=item.get(
+        #             "category",
+        #         ),
+
+        #         requirement=item.get(
+        #             "requirement",
+        #         ),
+
+        #         proposal_response=item.get(
+        #             "proposal_response",
+        #         ),
+
+        #         status=item.get(
+        #             "status",
+        #         ),
+
+        #         evidence=item.get(
+        #             "evidence",
+        #         ),
+
+        #         remarks=item.get(
+        #             "remarks",
+        #         ),
+        #     )
+
+        #     self.compliance_repository.create(
+        #         compliance_item,
+        #     )
+
+        #     if index == 0:
+        #         raise ValueError(
+        #             "TEST: intentional failure after first compliance item"
+        #         )
 
         return analysis

@@ -448,7 +448,7 @@ class ProposalService:
             project_id=project_id,
             rfp_id=rfp_id,
             document_id=document_id,
-            status=ProposalStatus.PROCESSING,
+            status=ProposalStatus.PENDING,
         )
 
         proposal = (
@@ -464,6 +464,28 @@ class ProposalService:
         self,
         proposal: Proposal,
     ) -> Proposal:
+
+        if proposal.status == ProposalStatus.READY:
+
+            raise ValueError(
+                "Proposal has already been processed."
+            )
+
+        if proposal.status == ProposalStatus.PROCESSING:
+
+            raise ValueError(
+                "Proposal is already being processed."
+            )
+
+        if proposal.status == ProposalStatus.PENDING:
+
+            proposal.status = ProposalStatus.PROCESSING
+
+            self.proposal_repository.update(
+                proposal,
+            )
+
+            self.db.commit()
 
         try:
 
@@ -491,6 +513,10 @@ class ProposalService:
                 proposal_id=proposal.id,
                 document=document,
             )
+
+            # raise ValueError(
+            #     "TEST: intentional analysis failure"
+            # )
 
             # Step 2:
             # Analyze proposal against RFP

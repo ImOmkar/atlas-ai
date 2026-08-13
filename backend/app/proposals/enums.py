@@ -7,6 +7,8 @@ class ProposalStatus(
     Enum,
 ):
 
+    PENDING = "pending"
+    
     PROCESSING = "processing"
 
     READY = "ready"

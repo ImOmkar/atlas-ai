@@ -58,7 +58,7 @@ class Proposal(
     status: Mapped[ProposalStatus] = mapped_column(
         Enum(ProposalStatus),
         nullable=False,
-        default=ProposalStatus.PROCESSING,
+        default=ProposalStatus.PENDING,
     )
 
 

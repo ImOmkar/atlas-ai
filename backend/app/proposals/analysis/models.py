@@ -36,6 +36,7 @@ class ProposalAnalysis(
             ondelete="CASCADE",
         ),
         nullable=False,
+        unique=True,
     )
 
     overall_score: Mapped[float | None] = mapped_column(
