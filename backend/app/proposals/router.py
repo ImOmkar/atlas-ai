@@ -30,6 +30,7 @@ from app.proposals.schemas import (
     ProposalAnalysisSummaryResponse,
     ProposalComplianceItemPageResponse
 )
+from app.proposals.exceptions import ProposalProcessingError
 
 router = APIRouter(
     prefix="/proposals",
@@ -114,7 +115,7 @@ def process_proposal(
             "status": proposal.status.value,
         }
 
-    except ValueError as e:
+    except ProposalProcessingError as e:
 
         raise HTTPException(
             status_code=400,

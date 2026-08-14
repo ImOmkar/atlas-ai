@@ -5,6 +5,7 @@ from app.auth.exceptions import InvalidRefreshTokenError, PermissionDeniedError,
 from app.organizations.exceptions import OrganizationMemberNotFoundError, OrganizationNotFoundError
 from app.projects.exceptions import ProjectNotFoundError
 from app.documents.exceptions import DocumentFileNotFoundError, DocumentNotFoundError
+from app.proposals.exceptions import ProposalProcessingError
 
 def register_exception_handlers(app: FastAPI):
 
@@ -128,5 +129,18 @@ def register_exception_handlers(app: FastAPI):
             status_code=404,
             content={
                 "detail": "Document file not found",
+            },
+        )
+
+
+    @app.exception_handler(ProposalProcessingError)
+    async def no_document_chunks_found_exception_handler(
+        request: Request,
+        exc: ProposalProcessingError,
+    ):
+        return JSONResponse(
+            status_code=404,
+            content={
+                "detail": "No document chunks found",
             },
         )

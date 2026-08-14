@@ -8,6 +8,8 @@ from app.llm.service import LLMService
 from app.proposals.prompts import (
     PROPOSAL_EXTRACTION_PROMPT,
 )
+from app.utils.llm import parse_llm_json
+from app.proposals.schemas import ProposalExtractionSchema
 
 
 class ProposalGenerator:
@@ -39,13 +41,18 @@ class ProposalGenerator:
             response
         )
 
-        response = (
-            response
-            .replace("```json", "")
-            .replace("```", "")
-            .strip()
+        parsed_response = parse_llm_json(response)
+
+        # parsed_response = parse_llm_json(
+        #     '{"unexpected_field": "test"}'
+        # )
+
+        # return parsed_response
+
+        validated_response = (
+            ProposalExtractionSchema.model_validate(
+                parsed_response
+            )
         )
 
-        return json.loads(
-            response
-        )
+        return validated_response.model_dump()

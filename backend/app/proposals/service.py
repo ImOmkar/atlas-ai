@@ -48,6 +48,7 @@ from app.proposals.schemas import (
     ProposalDetailsResponse,
 )
 from app.proposals.analysis.enums import ComplianceStatus
+from app.proposals.exceptions import ProposalProcessingError
 
 class ProposalService:
 
@@ -467,13 +468,13 @@ class ProposalService:
 
         if proposal.status == ProposalStatus.READY:
 
-            raise ValueError(
+            raise ProposalProcessingError(
                 "Proposal has already been processed."
             )
 
         if proposal.status == ProposalStatus.PROCESSING:
 
-            raise ValueError(
+            raise ProposalProcessingError(
                 "Proposal is already being processed."
             )
 
@@ -498,7 +499,7 @@ class ProposalService:
 
             if not chunks:
 
-                raise ValueError(
+                raise ProposalProcessingError(
                     "No document chunks found."
                 )
 
@@ -539,7 +540,12 @@ class ProposalService:
 
             return proposal
 
-        except Exception:
+        except Exception as e:
+
+            print(
+                "\nPROCESSING ERROR:",
+                repr(e),
+            )
 
             self.db.rollback()
 

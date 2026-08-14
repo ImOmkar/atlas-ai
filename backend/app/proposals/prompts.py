@@ -60,14 +60,50 @@ Do not invent a summary if one is not present.
 
 Extract information about the proposing/vendor organization.
 
-Include explicitly stated information such as:
+IMPORTANT:
+company_profile MUST always be a JSON object when company information
+is available. NEVER return company_profile as a plain string.
 
-- company background
-- organization description
-- years of experience
-- areas of expertise
-- certifications
-- organizational capabilities
+Use this structure:
+
+"company_profile": {
+    "company_name": null,
+    "company_background": null,
+    "organization_description": null,
+    "years_of_experience": null,
+    "areas_of_expertise": null,
+    "certifications": [],
+    "organizational_capabilities": null
+}
+
+Populate each property only with information explicitly stated in the
+document.
+
+Rules:
+
+- company_name: The explicitly stated legal or business name.
+- company_background: Background, history, former names, incorporation
+  information, or other explicitly stated organizational background.
+- organization_description: Description of what the organization does
+  or how it describes itself.
+- years_of_experience: Explicitly stated years of experience.
+- areas_of_expertise: Explicitly stated areas of expertise.
+- certifications: Explicitly stated certifications. Return [] if none.
+- organizational_capabilities: Explicitly stated organizational
+  capabilities, strengths, resources, or capabilities.
+
+If information for an individual property is genuinely absent, return
+null for that property.
+
+If no company information exists at all, return:
+
+"company_profile": {}
+
+NEVER return:
+
+"company_profile": "some text"
+
+All company_profile values must be contained inside the JSON object.
 
 ---
 
@@ -183,17 +219,38 @@ Keep distinct deliverables as separate list items.
 
 Extract the vendor's proposed support and maintenance approach.
 
-Include:
+IMPORTANT:
+support_model MUST always be a JSON object when support information
+is available. NEVER return support_model as a plain string.
 
-- support period
-- support channels
-- SLA information
-- maintenance
-- monitoring
-- incident management
-- post-production support
+Use this structure:
 
-Preserve stated response times and service levels exactly.
+"support_model": {
+    "support_period": null,
+    "support_channels": [],
+    "sla": null,
+    "maintenance": null,
+    "monitoring": null,
+    "incident_management": null,
+    "post_production_support": null
+}
+
+Populate each property only with information explicitly stated in the
+document.
+
+Preserve stated response times, resolution times, service levels,
+support periods, and other contractual conditions exactly.
+
+If information for an individual property is genuinely absent, return
+null or [] as appropriate.
+
+If no support information exists at all, return:
+
+"support_model": null
+
+NEVER return:
+
+"support_model": "some text"
 
 ---
 

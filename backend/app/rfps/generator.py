@@ -5,6 +5,7 @@ from app.llm.service import LLMService
 from app.rfps.prompts import (
     RFP_EXTRACTION_PROMPT,
 )
+from app.utils.llm import parse_llm_json
 
 
 class RFPGenerator:
@@ -40,13 +41,6 @@ class RFPGenerator:
             response
         )
 
-        response = (
-            response
-            .replace("```json", "")
-            .replace("```", "")
-            .strip()
-        )
+        parsed_response = parse_llm_json(response)
 
-        return json.loads(
-            response
-        )
+        return parsed_response

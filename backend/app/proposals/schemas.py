@@ -1,6 +1,7 @@
 from datetime import datetime
+from typing import Any
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 from app.proposals.enums import ProposalStatus
 from app.proposals.analysis.enums import ComplianceStatus
@@ -25,7 +26,7 @@ class ProposalRequirementResponse(
     relevant_experience: list = Field(default_factory=list)
     deliverables: list = Field(default_factory=list)
 
-    support_model: str | None = None
+    support_model: dict[str, Any] | None
 
     commercial_proposal: list = Field(default_factory=list)
     assumptions: list = Field(default_factory=list)
@@ -143,3 +144,43 @@ class ProposalComplianceItemPageResponse(
     page: int
     page_size: int
     total_pages: int
+
+
+
+
+
+class ProposalExtractionSchema(
+    BaseModel,
+):
+
+    model_config = ConfigDict(
+        extra="forbid",
+    )
+
+    executive_summary: str | None
+
+    company_profile: dict[str, Any]
+
+    understanding_of_requirements: str | None
+
+    proposed_solution: str | None
+
+    technical_approach: str | None
+
+    implementation_approach: str | None
+
+    project_team: list
+
+    relevant_experience: list
+
+    deliverables: list
+
+    support_model: dict[str, Any] | None
+
+    commercial_proposal: list
+
+    assumptions: list
+
+    exceptions: list
+
+    client_references: list

@@ -92,10 +92,11 @@ class ProposalRequirement(
     )
 
     company_profile: Mapped[
-        str | None
+        dict
     ] = mapped_column(
-        Text,
-        nullable=True,
+        JSON,
+        nullable=False,
+        default=dict,
     )
 
     understanding_of_requirements: Mapped[
@@ -151,9 +152,9 @@ class ProposalRequirement(
     )
 
     support_model: Mapped[
-        str | None
+        dict | None
     ] = mapped_column(
-        Text,
+        JSON,
         nullable=True,
     )
 
