@@ -1,0 +1,17 @@
+
+
+class UserAlreadyExistsError(Exception):
+    """Raised when a user tries to register with an existing email."""
+
+class InvalidCredentialsError(Exception):
+    """Raised when email or password is incorrect."""
+
+class InvalidRefreshTokenError(Exception):
+    """Raised when a refresh token is invalid."""
+
+class PermissionDeniedError(Exception):
+    """Raised when the user doesn't have permission."""
+
+class UserNotFoundError(Exception):
+    """Raised when the user does not exist."""
+

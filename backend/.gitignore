@@ -1,6 +1,47 @@
-.venv/
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*.pyo
+
+# Virtual Environment
+.venv/
+venv/
+env/
+
+# Environment
 .env
-.idea/
+
+# IDE
 .vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Logs
+*.log
+
+# SQLite
+*.db
+
+# Uploads
+storage/documents/
+
+# Alembic cache
+alembic/__pycache__/
+
+# Pytest
+.pytest_cache/
+
+# Coverage
+.coverage
+htmlcov/
+
+# Mypy
+.mypy_cache/
+
+# Ruff
+.ruff_cache/
+
+# Misc
+*.egg-info/

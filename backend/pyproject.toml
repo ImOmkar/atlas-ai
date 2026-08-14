@@ -1,21 +1,37 @@
 [project]
 name = "backend"
 version = "0.1.0"
-description = "Add your description here"
+description = "Atlas AI Backend"
 readme = "README.md"
-authors = [
-    { name = "Omkar Parab", email = "omkar211196@gmail.com" }
-]
 requires-python = ">=3.13"
 dependencies = [
+    "alembic>=1.18.5",
+    "bm25s>=0.3.10",
     "fastapi>=0.140.13",
+    "google-genai>=2.16.0",
+    "langchain-text-splitters>=1.1.2",
+    "openai>=2.53.0",
+    "pdf2image>=1.17.0",
+    "pgvector>=0.5.0",
+    "pillow>=12.3.0",
+    "psycopg[binary]>=3.3.4",
+    "pwdlib[argon2]>=0.3.0",
     "pydantic-settings>=2.14.2",
+    "pydantic[email]>=2.13.4",
+    "pyjwt>=2.13.0",
+    "pymupdf>=1.28.0",
+    "pytesseract>=0.3.13",
+    "python-docx>=1.2.0",
+    "python-multipart>=0.0.32",
+    "python-slugify>=8.0.4",
+    "requests>=2.34.2",
+    "sqlalchemy>=2.0.51",
     "uvicorn>=0.51.0",
 ]
 
-[project.scripts]
-backend = "backend:main"
-
 [build-system]
-requires = ["uv_build>=0.12.0,<0.13.0"]
+requires = ["uv_build>=0.8.13,<0.9.0"]
 build-backend = "uv_build"
+
+[tool.uv]
+package = false

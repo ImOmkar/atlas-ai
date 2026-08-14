@@ -1,0 +1,73 @@
+
+
+from datetime import datetime
+from app.auth.enums import UserRole
+from pydantic import BaseModel, EmailStr, ConfigDict
+
+
+class UserCreate(BaseModel):
+    name: str
+    email: EmailStr
+    password: str
+
+
+class UserResponse(BaseModel):
+    id: int
+    name: str
+    email: EmailStr
+    is_active: bool
+    is_verified: bool
+    role: UserRole
+    created_at: datetime
+
+    model_config = ConfigDict(
+        from_attributes=True
+    )
+
+class UpdateUserRoleRequest(BaseModel):
+    role: UserRole
+
+class UpdateUserStatusRequest(BaseModel):
+    is_active: bool
+    
+class UserListResponse(BaseModel):
+    id: int
+    name: str
+    email: EmailStr
+    role: UserRole
+    is_active: bool
+    is_verified: bool
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class PaginatedUsersResponse(BaseModel):
+    items: list[UserListResponse]
+    total: int
+    page: int
+    page_size: int
+    total_pages: int
+
+
+class LoginRequest(BaseModel):
+    email: EmailStr
+    password: str
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    refresh_token: str
+    token_type: str = "bearer"
+
+
+class SessionInfo(BaseModel):
+    user_agent: str | None = None
+    ip_address: str | None = None
+
+
+class RefreshRequest(BaseModel):
+    refresh_token: str
+
+
+class LogoutRequest(BaseModel):
+    refresh_token: str
